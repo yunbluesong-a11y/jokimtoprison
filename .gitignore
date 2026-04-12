@@ -1,0 +1,11 @@
+# 원본 파일 (용량 큼)
+raw/
+
+# SQLite journal
+*.sqlite-journal
+*.sqlite-wal
+*.sqlite-shm
+
+# OS
+.DS_Store
+Thumbs.db
