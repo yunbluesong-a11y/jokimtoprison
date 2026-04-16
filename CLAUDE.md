@@ -132,7 +132,7 @@
 
 ## 데이터 접근
 
-### DB: `db/jokim.sqlite` (통합 DB, 15개 테이블 + 1개 뷰, 약 21,300행)
+### DB: `db/jokim.sqlite` (통합 DB, 19개 테이블 + 1개 뷰)
 
 **⚠ SQLite 접근 규칙**: 마운트 경로(`mnt/jokimtoprison/db/`)에서는 `immutable=1` 모드로만 읽을 수 있다. 쓰기 작업이 필요하면 워킹 디렉토리에 복사 후 작업한다.
 
@@ -186,6 +186,22 @@
 | `범죄일람표_*_별지3_유흥대리운전` | 범죄일람표 별지3 | 577 | 범죄일람표_v2.xlsx |
 | `범죄일람표_*_총괄요약` | 범죄일람표 총괄 | 11 | 범죄일람표_v2.xlsx |
 | `evidence` | 증거 목록 | 14 | - |
+
+#### 전자소송 기록 테이블
+
+| 테이블명 | 내용 | 행 수 | 텍스트 추출 | 원본 경로 |
+|---------|------|-------|-----------|----------|
+| `case_docs_2025재나1041` | 재심 사건 문서목록 | 331 | 61건 (서면+조서) | `전자소송 기록/재심_2025재나1041/` |
+| `case_docs_2025나8122` | 부당이득 사건 문서목록 | 361 | 79건 (서면+조서) | `전자소송 기록/부당이득_2025나8122/` |
+
+**컬럼**: id, filename, ext, size_kb, doc_no, sub_no, date, doc_type, description, evidence_no, party, category, text_extractable, body, case_no, court, source_path
+
+**category 분류**: brief(서면), evidence(서증), order(변론조서/판결문), court_order(법원결정/명령), attachment(첨부), response(회신서), unknown
+
+**사용법**:
+- 서면 본문 검색: `SELECT doc_no, date, doc_type, body FROM "case_docs_2025나8122" WHERE text_extractable=1 AND body LIKE '%키워드%'`
+- 문서 목록: `SELECT doc_no, date, doc_type, category, party FROM "case_docs_2025나8122" ORDER BY doc_no`
+- 증거 목록: `SELECT * FROM "case_docs_2025나8122" WHERE category='evidence'`
 
 ### 원본 파일: `raw/` (13개 파일, ~11MB)
 
